@@ -168,4 +168,32 @@ class S3TransferComponent extends Object {
 		return false;
 	}
 
+	/**
+	 * Invalidate objects in a CloudFront distribution
+	 * 
+	 * @access public
+	 * @param string $distId
+	 * @param array $paths
+	 * @return boolean
+	 */
+	public function invalidateDist($distId, $paths = array()) {
+		if (empty($distId)) {
+			trigger_error('Uploader.S3Transfer::invalidateDist(): Distribution ID missing.', E_USER_WARNING);
+			return false;
+		}
+
+		if ($this->__enabled) {
+			if (!empty($paths)) {
+				if ($this->S3->invalidateDistribution($distId, $paths)) {
+					return true;
+				} else {
+					trigger_error('Uploader.S3Transfer::invalidateDist(): Error invalidating object paths.', E_USER_WARNING);
+				}
+			} else{
+				trigger_error('Uploader.S3Transfer::invalidateDist(): Object paths array is empty. Nothing to invalidate.', E_USER_WARNING);
+			}
+		}
+
+		return false;
+	}
 }
